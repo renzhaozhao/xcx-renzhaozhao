@@ -1,0 +1,10 @@
+<!--pages/match/match.wxml-->
+<view>
+  <block wx:if="{{!image}}">
+    <canvas class="canvas" canvas-id="myCanvas" style="width:{{windowWidth?windowWidth+'px':'100%'}};height:{{windowHeight? windowHeight+'px':'100%'}}"/>
+  </block>
+  <block wx:if="{{image}}">
+    <image style="width:{{windowWidth?windowWidth+'px':'100%'}};height:{{windowHeight? windowHeight+'px':'100%'}}" src="{{image}}" bindtap="saveImage"/>
+  </block>
+</view>
+

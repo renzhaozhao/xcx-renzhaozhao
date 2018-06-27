@@ -1,0 +1,8 @@
+/* pages/match/match.wxss */
+.canvas {
+  /* background-color: #3f1523; */
+}
+
+.image {
+  width: 100%;
+}
