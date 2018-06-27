@@ -16,6 +16,12 @@ function formatNumber(n) {
   return n[1] ? n : '0' + n
 }
 
+function resetSize(px) {
+  const width = getApp().globalData.windowWidth
+  return (px * width / 1242)
+}
+
 module.exports = {
-  formatTime: formatTime
+  formatTime: formatTime,
+  resetSize: resetSize
 }

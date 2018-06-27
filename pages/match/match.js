@@ -1,12 +1,14 @@
 // pages/match/match.js
+const app = getApp()
+const { resetSize } = require('../../utils/util.js')
 Page({
 
   /**
    * 页面的初始数据
    */
   data: {
-    windowWidth: null,
-    windowHeight: null,
+    windowWidth: app.globalData.windowWidth,
+    windowHeight: app.globalData.windowWidth * 5 / 3,
     image: null
   },
 
@@ -18,28 +20,50 @@ Page({
   },
 
   init:function(){
-    try {
-      var res = wx.getSystemInfoSync()
-      this.setData({
-        windowWidth: res.windowWidth * res.pixelRatio,
-        windowHeight: res.windowWidth * res.pixelRatio * 5 / 3
-      })
-    } catch (e) {
-      console.log(e)
-    }
     const ctx = wx.createCanvasContext('myCanvas')
     this.draw(ctx)
   },
 
   draw:function(ctx){
-    ctx.setFillStyle('#3f1523')
-    ctx.fillRect(0, 0, this.data.windowWidth,this.data.windowHeight)
-    ctx.setFillStyle('red')
-    ctx.fillRect(10, 10, 150, 75)
-    ctx.fillRect(100, 100, 150, 75)
-    ctx.fillRect(100, 300, 150, 75)
+    // ctx.setFillStyle('#3f1523')
+    // ctx.fillRect(0, 0, this.data.windowWidth,this.data.windowHeight)
+    // 初始配置
+    const TEAM_WIDTH = resetSize(100)
+    const TEAM_HEIGHT = resetSize(60)
+
+    const LINE_WIDTH = resetSize(60)
+    const LINE_BORDER = resetSize(2)
+    const TEAM_PADDING = resetSize(60)
+    const LINE_HEIGHT = TEAM_HEIGHT / 2 + TEAM_PADDING / 2
+
+    const INITIAL_X = resetSize(50)
+    const INITIAL_Y = resetSize(50)
+
+
+    ctx.lineWidth = LINE_BORDER
+    ctx.fillStyle = 'black'
+
+    // 队伍1
+    ctx.fillRect(INITIAL_X, INITIAL_Y, TEAM_WIDTH, TEAM_HEIGHT)
+    // const team1logo = new Image()
+    // team1logo.src = 'http://thumb.vpgcdn.com/crop/100x60/13739c5720.png'
+    // ctx.drawImage(team1logo, INITIAL_X + 100, INITIAL_Y + 100)
+    ctx.beginPath()
+    ctx.moveTo(INITIAL_X + TEAM_WIDTH, INITIAL_Y + TEAM_HEIGHT / 2)
+    ctx.lineTo(INITIAL_X + TEAM_WIDTH + LINE_WIDTH, INITIAL_Y + TEAM_HEIGHT / 2)
+    ctx.lineTo(INITIAL_X + TEAM_WIDTH + LINE_WIDTH, INITIAL_Y + TEAM_HEIGHT / 2 + LINE_HEIGHT)
+    ctx.stroke()
+
+    // 队伍2
+    ctx.fillRect(INITIAL_X, INITIAL_Y + TEAM_HEIGHT + TEAM_PADDING, TEAM_WIDTH, TEAM_HEIGHT)
+    ctx.beginPath()
+    ctx.moveTo(INITIAL_X + TEAM_WIDTH, INITIAL_Y + TEAM_PADDING + TEAM_HEIGHT * 1.5)
+    ctx.lineTo(INITIAL_X + TEAM_WIDTH + LINE_WIDTH, INITIAL_Y + TEAM_PADDING + TEAM_HEIGHT * 1.5)
+    ctx.lineTo(INITIAL_X + TEAM_WIDTH + LINE_WIDTH, INITIAL_Y + TEAM_HEIGHT / 2 + LINE_HEIGHT)
+    ctx.stroke()
+
     ctx.draw(false,()=>{
-      this.convertCanvasToImage()
+      // this.convertCanvasToImage()
     })
   },
 
@@ -64,12 +88,23 @@ Page({
   },
 
   saveImage: function () {
-    wx.saveImageToPhotosAlbum({
-      filePath:this.data.image,
-      success(res) {
-        console.log('chenggong')
+    const _this = this
+    wx.showActionSheet({
+      itemList: ['保存到相册'],
+      success: function (res) {
+        console.log(res.tapIndex)
+        wx.saveImageToPhotosAlbum({
+          filePath: _this.data.image,
+          success(res) {
+            console.log('chenggong')
+          }
+        })
+      },
+      fail: function (res) {
+        console.log(res.errMsg)
       }
     })
+    
   },
 
   /**

@@ -1,10 +1,23 @@
 //app.js
 App({
   onLaunch: function () {
+    console.log('onLaunch')
     //调用API从本地缓存中获取数据
     var logs = wx.getStorageSync('logs') || []
     logs.unshift(Date.now())
     wx.setStorageSync('logs', logs)
+    this.getUserInfo()
+    this.getSystem()
+  },
+
+  getSystem: function(){
+    console.log('getSystem')
+    try {
+      var res = wx.getSystemInfoSync()
+      this.globalData.windowWidth = res.windowWidth
+    } catch (e) {
+      console.log(e)
+    }
   },
 
   getUserInfo: function (cb) {
@@ -24,6 +37,7 @@ App({
   },
 
   globalData: {
-    userInfo: null
+    userInfo: null,
+    windowWidth: 750
   }
 })
